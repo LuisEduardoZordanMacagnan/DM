@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
         Button botao = findViewById(R.id.button);
         TextView saida = findViewById(R.id.texto);
-        TextView t1 = findViewById(R.id.n1);
-        TextView t2 = findViewById(R.id.n2);
+        EditText t1 = findViewById(R.id.n1);
+        EditText t2 = findViewById(R.id.n2);
 
         botao.setOnClickListener(new View.OnClickListener() {
             @Override
