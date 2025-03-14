@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         botao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!t1.getText().toString().isEmpty() || !t2.getText().toString().isEmpty()){
+                if (!t1.getText().toString().isEmpty() && !t2.getText().toString().isEmpty()){
                     Integer min = Integer.parseInt(t1.getText().toString()), max = Integer.parseInt(t2.getText().toString());
                     if (min>max){
                         min = max;
