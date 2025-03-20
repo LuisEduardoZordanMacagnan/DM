@@ -8,10 +8,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,29 +27,43 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        Log.d("ciclodevida", "onCreate");
+        Toast.makeText(this, "Sussus Amogus", Toast.LENGTH_LONG).show();
+    }
 
-        Button botao = findViewById(R.id.button);
-        TextView saida = findViewById(R.id.texto);
-        EditText t1 = findViewById(R.id.n1);
-        EditText t2 = findViewById(R.id.n2);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("ciclodevida", "onStart");
+    }
 
-        botao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!t1.getText().toString().isEmpty() && !t2.getText().toString().isEmpty()){
-                    Integer min = Integer.parseInt(t1.getText().toString()), max = Integer.parseInt(t2.getText().toString());
-                    if (min>max){
-                        min = max;
-                        max = Integer.parseInt(t1.getText().toString());
-                    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("ciclodevida", "onResume");
+    }
 
-                    Integer resul = Math.toIntExact(Math.round((Math.random()*(max-min))+min));
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("ciclodevida", "onPause");
+    }
 
-                    saida.setText(resul.toString());
-                }
-            }
-        });
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("ciclodevida", "onStop");
+    }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("ciclodevida", "onRestart");
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("ciclodevida", "onDestroy");
     }
 }
