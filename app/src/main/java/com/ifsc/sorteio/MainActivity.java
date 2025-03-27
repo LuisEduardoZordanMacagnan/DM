@@ -1,6 +1,9 @@
 package com.ifsc.sorteio;
 
+import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT;
+
 import android.content.Intent;
+import android.health.connect.datatypes.units.Length;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -10,72 +13,45 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+
 public class MainActivity extends AppCompatActivity {
+    EditText alturaText;
+    EditText pesoText;
     Button botao;
-    EditText editText;
+    Intent i;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        botao = findViewById(R.id.button);
-        editText = findViewById(R.id.editTextText);
 
-        botao.setOnClickListener(b->{
-            Intent i = new Intent(getApplicationContext(), MsgActivity.class);
-            String msg = editText.getText().toString();
-            i.putExtra("msg", msg);
-            startActivity(i);
-        });
+        i = new Intent(getApplicationContext(), MsgActivity.class);
+        botao = findViewById(R.id.button);
+        pesoText = findViewById(R.id.peso);
+        alturaText = findViewById(R.id.altura);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        Log.d("ciclodevida", "onCreate");
-        Toast.makeText(this, "Sussus Amogus", Toast.LENGTH_LONG).show();
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d("ciclodevida", "onStart");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("ciclodevida", "onResume");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d("ciclodevida", "onPause");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("ciclodevida", "onStop");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d("ciclodevida", "onRestart");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("ciclodevida", "onDestroy");
+        botao.setOnClickListener(b->{
+            try {
+                Float altura = Float.parseFloat(alturaText.getText().toString());
+                Float peso = Float.parseFloat(pesoText.getText().toString());
+                Float imc = peso/(altura*altura);
+                i.putExtra("imc", imc.toString());
+                startActivity(i);
+            }catch (Exception e){
+                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.main), e.getMessage(), LENGTH_SHORT);
+                mySnackbar.show();
+            }
+        });
     }
 }
