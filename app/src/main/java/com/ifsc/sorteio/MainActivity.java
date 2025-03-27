@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
                 Float imc = peso/(altura*altura);
                 i.putExtra("imc", imc.toString());
                 startActivity(i);
-            }catch (Exception e){
-                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.main), e.getMessage(), LENGTH_SHORT);
+            }catch (NumberFormatException e){
+                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.main), "Erro: "+e.getMessage(), LENGTH_SHORT);
                 mySnackbar.show();
             }
         });
