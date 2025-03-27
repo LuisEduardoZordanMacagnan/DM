@@ -36,19 +36,19 @@ public class MsgActivity extends AppCompatActivity {
 
         String mensagem=imc.toString()+"\n";
         ImageView image = findViewById(R.id.image);
-        if(imc>40f){
+        if(imc>=40f){
             image.setImageResource(R.drawable.obesidade3);
             mensagem+="Obesidade 3";
-        }else if(imc>35f){
+        }else if(imc>=35f){
             image.setImageResource(R.drawable.obesidade2);
             mensagem+="Obesidade 2";
-        }else if(imc>30f){
+        }else if(imc>=30f){
             image.setImageResource(R.drawable.obesidade1);
             mensagem+="Obesidade 1";
-        }else if(imc>25f){
+        }else if(imc>=25f){
             image.setImageResource(R.drawable.sobrepeso);
             mensagem+="Sobrepeso";
-        }else if(imc>18.5){
+        }else if(imc>=18.5){
             image.setImageResource(R.drawable.normal);
             mensagem+="Peso normal";
         }else{
