@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">ContaClick</string>
+    <string name="app_name">Layouts</string>
+    <string name="nome">Nome</string>
+    <string name="email">Email</string>
+    <string name="aniversario">Aniversário</string>
+    <string name="cep">CEP</string>
+    <string name="telefone">Telefone</string>
+    <string name="cidade">Cidade</string>
 </resources>
