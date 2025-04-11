@@ -25,16 +25,5 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        Button botao = findViewById(R.id.button);
-        TextView text = findViewById(R.id.indice);
-
-        botao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                indice++;
-                text.setText(String.valueOf(indice));
-            }
-        });
     }
 }
