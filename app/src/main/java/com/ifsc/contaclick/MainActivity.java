@@ -2,9 +2,7 @@ package com.ifsc.contaclick;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +16,7 @@ import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button limpar, colorPicker;
+    Button limpar, colorPicker, desfazer, formato;
     SimplePaint simplePaint;
 
     @Override
@@ -35,9 +33,15 @@ public class MainActivity extends AppCompatActivity {
         limpar = findViewById(R.id.limpar);
         simplePaint = findViewById(R.id.simplePaint);
         colorPicker = findViewById(R.id.colorPicker);
+        desfazer = findViewById(R.id.undo);
+        formato = findViewById(R.id.formato);
 
         limpar.setOnClickListener(e->{
             simplePaint.limpa();
+        });
+
+        desfazer.setOnClickListener(e->{
+            simplePaint.desfazer();
         });
 
         colorPicker.setOnClickListener(e->{
@@ -63,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
                     .attachBrightnessSlideBar(true)  // the default value is true.
                     .setBottomSpace(12) // set a bottom space between the last slidebar and buttons.
                     .show();
+        });
+
+        formato.setOnClickListener(e->{
+            formato.setText(simplePaint.trocaFormato());
         });
     }
 }

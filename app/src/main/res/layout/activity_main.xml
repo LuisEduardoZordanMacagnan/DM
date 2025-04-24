@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:text="Limpar"
         app:layout_constraintBottom_toTopOf="@+id/simplePaint"
-        app:layout_constraintEnd_toStartOf="@+id/colorPicker"
+        app:layout_constraintEnd_toStartOf="@+id/formato"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -35,6 +35,28 @@
         android:text="Cor"
         app:layout_constraintBottom_toTopOf="@+id/simplePaint"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/undo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/undo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Desfazer"
+        app:layout_constraintBottom_toTopOf="@+id/simplePaint"
+        app:layout_constraintEnd_toStartOf="@+id/colorPicker"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/formato"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/formato"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Formato"
+        app:layout_constraintBottom_toTopOf="@+id/simplePaint"
+        app:layout_constraintEnd_toStartOf="@+id/undo"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/limpar"
         app:layout_constraintTop_toTopOf="parent" />
