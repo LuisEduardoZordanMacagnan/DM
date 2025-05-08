@@ -27,9 +27,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Button bA = findViewById(R.id.buttonFragmentA);
+        Button bB = findViewById(R.id.buttonFragmentoB);
 
         bA.setOnClickListener(e ->{
             fragment = new FragmentA();
+            abreFragmento();
+        });
+
+        bB.setOnClickListener(e->{
+            fragment = new FragmentB();
             abreFragmento();
         });
     }
