@@ -10,11 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
-
-    int indice = 0;
-
+    Fragment fragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,15 +26,20 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        Button botao = findViewById(R.id.button);
-        TextView text = findViewById(R.id.indice);
+        Button bA = findViewById(R.id.buttonFragmentA);
 
-        botao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                indice++;
-                text.setText(String.valueOf(indice));
-            }
+        bA.setOnClickListener(e ->{
+            fragment = new FragmentA();
+            abreFragmento();
         });
+    }
+
+    public void abreFragmento(){
+        if (this.fragment != null){
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame,fragment);
+            transaction.commit();
+        }
+
     }
 }
