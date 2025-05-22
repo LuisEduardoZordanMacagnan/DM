@@ -2,7 +2,9 @@ package com.ifsc.contaclick;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -13,8 +15,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 
-    int indice = 0;
-
+    ListView lv;
+    String[] nomes = {"a", "b", "c"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,15 +28,15 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        Button botao = findViewById(R.id.button);
-        TextView text = findViewById(R.id.indice);
+        lv = findViewById(R.id.lv);
 
-        botao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                indice++;
-                text.setText(String.valueOf(indice));
-            }
-        });
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1,
+                android.R.id.text1,
+                nomes);
+
+        lv.setAdapter(adapter);
+
+        //lv.setOnClickListener();
     }
 }
