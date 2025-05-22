@@ -1,7 +1,10 @@
 package com.ifsc.contaclick;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -16,7 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class MainActivity extends AppCompatActivity {
 
     ListView lv;
-    String[] nomes = {"a", "b", "c"};
+    DAOPlaneta daoPlaneta;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,13 +33,23 @@ public class MainActivity extends AppCompatActivity {
 
         lv = findViewById(R.id.lv);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1,
-                android.R.id.text1,
-                nomes);
+        daoPlaneta = new DAOPlaneta();
+        PlanetaAdapter planetaAdapter = new PlanetaAdapter(this,
+                R.layout.activity_planeta_adapter,
+                daoPlaneta.planetas);
 
-        lv.setAdapter(adapter);
+        lv.setAdapter(planetaAdapter);
 
-        //lv.setOnClickListener();
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent=new Intent(getApplicationContext(),AtividadeB.class);
+                //Setando objeto serializado no bundle
+                intent.putExtra("planeta",daoPlaneta.planetas.get(position));
+
+                startActivity(intent);
+
+            }
+        });
     }
 }
