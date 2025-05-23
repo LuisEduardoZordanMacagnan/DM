@@ -1,6 +1,10 @@
 package com.ifsc.contaclick;
 
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Adapter;
@@ -16,10 +20,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+    PackageManager packageManager;
 
     ListView lv;
-    DAOPlaneta daoPlaneta;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,23 +38,35 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        packageManager = getPackageManager();
+        List<ApplicationInfo> appInfo = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN);
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> aplicacoes = packageManager.queryIntentActivities(mainIntent, 0);
+
+        ArrayList<String> nomes = new ArrayList<String>();
+
+        for (ResolveInfo resolveInfo : aplicacoes){
+            nomes.add(resolveInfo.loadLabel(packageManager).toString());
+        }
+
         lv = findViewById(R.id.lv);
 
-        daoPlaneta = new DAOPlaneta();
-        PlanetaAdapter planetaAdapter = new PlanetaAdapter(this,
+        /*ArrayAdapter<> planetaAdapter = new PlanetaAdapter(this,
                 R.layout.activity_planeta_adapter,
-                daoPlaneta.planetas);
+                daoPlaneta.planetas);*/
 
-        lv.setAdapter(planetaAdapter);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1,
+                android.R.id.text1,
+                nomes);
+
+        lv.setAdapter(adapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent=new Intent(getApplicationContext(),AtividadeB.class);
-                //Setando objeto serializado no bundle
-                intent.putExtra("planeta",daoPlaneta.planetas.get(position));
-
-                startActivity(intent);
 
             }
         });

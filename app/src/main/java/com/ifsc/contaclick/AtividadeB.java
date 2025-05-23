@@ -23,16 +23,5 @@ public class AtividadeB extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        Intent i = getIntent();
-        Bundle b = i.getExtras();
-        Planeta planeta = (Planeta) b.getSerializable("planeta");
-
-        TextView title = findViewById(R.id.viewTitle);
-        TextView desc = findViewById(R.id.viewDesc);
-        ImageView image = findViewById(R.id.imageView);
-
-        title.setText(planeta.getNome());
-        image.setImageResource(planeta.getFoto());
     }
 }
