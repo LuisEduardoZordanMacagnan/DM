@@ -45,10 +45,17 @@ public class MainActivity extends AppCompatActivity {
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         List<ResolveInfo> aplicacoes = packageManager.queryIntentActivities(mainIntent, 0);
 
-        ArrayList<String> nomes = new ArrayList<String>();
+        ArrayList<Aplicativo> apps = new ArrayList<Aplicativo>();
 
-        for (ResolveInfo resolveInfo : aplicacoes){
-            nomes.add(resolveInfo.loadLabel(packageManager).toString());
+        for (ApplicationInfo app : packageManager.getInstalledApplications(PackageManager.GET_META_DATA)) {
+            if ((app.flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0) {
+                Aplicativo aplicativo = new Aplicativo(
+                        app.loadLabel(packageManager).toString(),
+                        app.packageName,
+                        packageManager.resolveActivity(new Intent(Intent.ACTION_MAIN).setPackage(app.packageName), PackageManager.MATCH_DEFAULT_ONLY),
+                        app.loadIcon(packageManager));
+                apps.add(aplicativo);
+            }
         }
 
         lv = findViewById(R.id.lv);
@@ -57,17 +64,17 @@ public class MainActivity extends AppCompatActivity {
                 R.layout.activity_planeta_adapter,
                 daoPlaneta.planetas);*/
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1,
-                android.R.id.text1,
-                nomes);
-
-        lv.setAdapter(adapter);
+        AppAdapter appAdapter = new AppAdapter(this, R.layout.um_item, apps);
+        lv.setAdapter(appAdapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Aplicativo aplicativo = (Aplicativo) parent.getItemAtPosition(position);
+                Intent launchIntent = packageManager.getLaunchIntentForPackage(aplicativo.getPackageName());
+                if (launchIntent != null) {
+                    startActivity(launchIntent);
+                }
             }
         });
     }
