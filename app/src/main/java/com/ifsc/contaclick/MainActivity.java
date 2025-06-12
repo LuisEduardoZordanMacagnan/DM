@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         packageManager = getPackageManager();
-        List<ApplicationInfo> appInfo = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+        List<ApplicationInfo> appInfo = packageManager.getInstalledApplications(PackageManager.MATCH_ALL);
 
         Intent mainIntent = new Intent(Intent.ACTION_MAIN);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -47,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<Aplicativo> apps = new ArrayList<Aplicativo>();
 
-        for (ApplicationInfo app : packageManager.getInstalledApplications(PackageManager.GET_META_DATA)) {
-            if ((app.flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0) {
+        for (ApplicationInfo app : appInfo) {
+            if ( packageManager.getLaunchIntentForPackage(app.packageName)!= null ) {
                 Aplicativo aplicativo = new Aplicativo(
                         app.loadLabel(packageManager).toString(),
                         app.packageName,
@@ -60,10 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
         lv = findViewById(R.id.lv);
 
-        /*ArrayAdapter<> planetaAdapter = new PlanetaAdapter(this,
-                R.layout.activity_planeta_adapter,
-                daoPlaneta.planetas);*/
-
         AppAdapter appAdapter = new AppAdapter(this, R.layout.um_item, apps);
         lv.setAdapter(appAdapter);
 
@@ -74,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent launchIntent = packageManager.getLaunchIntentForPackage(aplicativo.getPackageName());
                 if (launchIntent != null) {
                     startActivity(launchIntent);
+                }else{
+                    Toast.makeText( parent.getContext(), "Não é executavel", Toast.LENGTH_LONG).show();
                 }
             }
         });

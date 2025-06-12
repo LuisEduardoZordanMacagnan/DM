@@ -32,8 +32,8 @@ public class AppAdapter extends ArrayAdapter<Aplicativo> {
         Aplicativo aplicativo = getItem(position);
 
         if (aplicativo != null) {
-            TextView nomeTextView = convertView.findViewById(R.id.imageView2);
-            ImageView iconeImageView = convertView.findViewById(R.id.textView);
+            TextView nomeTextView = convertView.findViewById(R.id.textView);
+            ImageView iconeImageView = convertView.findViewById(R.id.imageView2);
             nomeTextView.setText(aplicativo.getNome());
             iconeImageView.setImageDrawable(aplicativo.getIcone());
 
