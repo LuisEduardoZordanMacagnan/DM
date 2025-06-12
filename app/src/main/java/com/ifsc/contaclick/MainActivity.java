@@ -40,23 +40,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
         packageManager = getPackageManager();
-        List<ApplicationInfo> appInfo = packageManager.getInstalledApplications(PackageManager.MATCH_ALL);
-
-        Intent mainIntent = new Intent(Intent.ACTION_MAIN);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> aplicacoes = packageManager.queryIntentActivities(mainIntent, 0);
 
         ArrayList<Aplicativo> apps = new ArrayList<Aplicativo>();
 
-        for (ApplicationInfo app : appInfo) {
-            if ( packageManager.getLaunchIntentForPackage(app.packageName)!= null ) {
-                Aplicativo aplicativo = new Aplicativo(
-                        app.loadLabel(packageManager).toString(),
-                        app.packageName,
-                        packageManager.resolveActivity(new Intent(Intent.ACTION_MAIN).setPackage(app.packageName), PackageManager.MATCH_DEFAULT_ONLY),
-                        app.loadIcon(packageManager));
-                apps.add(aplicativo);
-            }
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> aplicacoes = packageManager.queryIntentActivities(intent, 0);
+
+        for (ResolveInfo app : aplicacoes) {
+            Aplicativo aplicativo = new Aplicativo(
+                app.loadLabel(packageManager).toString(),
+                app.activityInfo.packageName,
+                packageManager.resolveActivity(new Intent(Intent.ACTION_MAIN).setPackage(app.activityInfo.packageName), PackageManager.MATCH_DEFAULT_ONLY),
+                app.loadIcon(packageManager));
+            apps.add(aplicativo);
         }
 
         lv = findViewById(R.id.lv);
