@@ -5,11 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btnGetLocation"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Obter Localização" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnGetLocation"
+            android:layout_width="247dp"
+            android:layout_height="wrap_content"
+            android:text="Obter Localização" />
+
+        <Button
+            android:id="@+id/viewHome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Home" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/txtCoordenadas"
@@ -18,4 +32,9 @@
         android:text="Coordenadas aparecerão aqui"
         android:paddingTop="16dp"
         android:textSize="18sp" />
+
+    <org.osmdroid.views.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
