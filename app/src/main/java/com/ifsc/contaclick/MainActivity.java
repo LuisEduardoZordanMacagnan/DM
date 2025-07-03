@@ -1,122 +1,95 @@
 package com.ifsc.contaclick;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
+import android.os.Looper;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.core.app.ActivityCompat;
 
-import java.util.ArrayList;
+import com.google.android.gms.location.*;
+import com.google.android.gms.location.FusedLocationProviderClient;
 
 public class MainActivity extends AppCompatActivity {
 
-    SQLiteDatabase db;
-    Button salvar;
-    TextView texto;
-    ListView listView;
-    ArrayList<Nota> notas = new ArrayList<Nota>();
-    Integer id;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private FusedLocationProviderClient fusedLocationClient;
+    private TextView txtCoordenadas;
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
-        salvar = findViewById(R.id.salvar);
-        texto = findViewById(R.id.texto);
-        listView = findViewById(R.id.view);
+        txtCoordenadas = findViewById(R.id.txtCoordenadas);
+        Button btnGetLocation = findViewById(R.id.btnGetLocation);
 
-        db = openOrCreateDatabase("notas", MODE_PRIVATE, null);
-        db.execSQL("CREATE TABLE IF NOT EXISTS NOTAS (" +
-                "ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
-                "TEXTO TEXT)");
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        salvar.setOnClickListener(b ->{
-            if (id!=null){
-                atualizaNota(id, texto.getText().toString());
-            } else {
-                insereNota(texto.getText().toString());
+        //configura a solicitação de localização
+        locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
+                .setWaitForAccurateLocation(true)
+
+                .build();
+
+        //configura o callback para receber as atualizações de localização  ou objeto LocationResult
+        // VERSÃO ÚNICA
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                Location location = locationResult.getLastLocation();
+                if (location != null) {
+                    txtCoordenadas.setText("Latitude: " + location.getLatitude() + "\nLongitude: " + location.getLongitude());
+                } else {
+                    txtCoordenadas.setText("Localização não disponível");
+                }
             }
+        };
 
-            texto.setText("");
-            id = null;
-            loadNotas();
-        });
-
-        listView.setOnItemLongClickListener((adapterView, view, i, l) -> {
-            deletarNota(notas.get(i).getId());
-
-            loadNotas();
-
-            return false;
-        });
-
-        listView.setOnItemClickListener((adapterView, view, i, l) -> {
-            Nota nota = notas.get(i);
-
-            texto.setText(nota.getTexto());
-            id = nota.getId();
-
-        });
-
-        loadNotas();
+        //configra o botão para obter a localização
+        btnGetLocation.setOnClickListener(v -> getLocation());
     }
 
-    void loadNotas(){
-        notas.clear();
-
-        Cursor cursor = db.rawQuery("SELECT * FROM notas", null);
-        cursor.moveToFirst();
-
-        int cId = cursor.getColumnIndex("ID");
-        int cTexto = cursor.getColumnIndex("TEXTO");
-        while (!cursor.isAfterLast()){
-            notas.add(new Nota(cursor.getInt(cId), cursor.getString(cTexto)));
-            cursor.moveToNext();
+    public void getLocation() {
+        //checa se a permissão de localização foi concedida usando o ActivityCompat do AndroidX
+        //getPackageManager().checkPermission(permission, getPackageName()); equivalente apos api 23
+        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) || (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)) != PackageManager.PERMISSION_GRANTED ){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+            return;
         }
 
-        AdapterNota adapter = new AdapterNota(getApplicationContext(),
-                android.R.layout.simple_list_item_1,
-                notas);
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationListener, Looper.getMainLooper());
 
-        listView.setAdapter(adapter);
-
-        cursor.close();
     }
 
-    Long insereNota(String insert){
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("TEXTO", insert);
+    public final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(@NonNull Location location) {
+            txtCoordenadas.setText("Latitude: " + location.getLatitude() + "\nLongitude: " + location.getLongitude());
+        }
+    };
 
-        return db.insert("notas", null, contentValues);
-    }
-
-    void atualizaNota(int id, String update){
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("TEXTO", update);
-
-        db.update("notas", contentValues, "id=?", new String[]{Integer.toString(id)});
-    }
-
-    void deletarNota(int delete){
-        db.delete("notas", "ID = ?", new String[] {Integer.toString(delete)});
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLocation();
+            } else {
+                Toast.makeText(this, "Permissão de localização negada", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
